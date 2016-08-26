@@ -1,0 +1,151 @@
+<!--
+@license
+Copyright (c) 2016 The Ingresso Rápido Web Components Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://ingressorapidowebcomponents.github.io/LICENSE.txt
+The complete set of authors may be found at http://ingressorapidowebcomponents.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://ingressorapidowebcomponents.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+
+The `flip-element` allows you to add two children nodes, one should have a `front` attribute and the other should have a `back` attribute.
+After this just call the `flip` when you want, so you will have a great animation!
+
+![alt front](images/front.png) ![alt back](images/back.png)
+
+It's important to define the same size to front and back children node, like this:
+
+```html
+    <flip-element id="example">
+      <div back style="width: 360px; height: 300px;">
+        <iframe width="360" height="300" src="https://www.youtube.com/embed/c6SMZAOwrQQ" frameborder="0" allowfullscreen>
+        </iframe>
+      </div>
+      <img front style="width: 360px; height: 300px;" src="https://s-media-cache-ak0.pinimg.com/originals/83/90/0a/83900a5b6d403ddbfd4e843ea70828f4.jpg">
+    </flip-element>
+```
+
+After that, create an editor:
+```js
+    this.$.example.flip();
+```
+
+@demo demo/index.html
+
+-->
+
+<dom-module id="flip-element">
+  <template>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .container {
+        font-family:verdana;
+        height: 100%;
+        perspective: 500px;
+        position: relative;
+        width: 100%;
+      }
+      .card {
+        position: relative;
+        border-radius: 5px;
+        border: 1px solid #CCC;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: 1s;
+        width: 100%;
+        box-shadow: 0 0 10px #ccc;
+      }
+      #contentNode {
+        backface-visibility:hidden;
+        border-radius: 5px;
+        position: absolute;
+      }
+      .back { /* Background */
+        transform: rotateY(180deg);
+        -moz-backface-visibility:hidden;
+      }
+      .card.flipped {
+        transform: rotateY(180deg);
+        -moz-backface-visibility:hidden;
+      }
+      .toggle {
+        display: block;
+        background-color: rgb(148, 201, 243);
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+      }
+    </style>
+    <div class="container">
+      <div id="card" class="card" style$="height: {{_height}}; width: {{_width}};">
+        <content id="contentNode"></content>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'flip-element',
+
+      properties: {
+        _observer: {
+          type: Object
+        },
+        _height: {
+          type: String,
+          value: '100%'
+        },
+        _width: {
+          type: String,
+          value: '100%'
+        }
+      },
+
+      _applyStyles: function() {
+        if (this.getContentChildren('content')) {
+          var height = 0;
+          var width = 0;
+          for (var i = 0; this.getContentChildren('content').length > i; i++) {
+            var child = this.getContentChildren('content')[i];
+            height = child.clientHeight > height ? child.clientHeight : height;
+            width = child.clientWidth > width ? child.clientWidth : width;
+            child.style['backface-visibility'] = 'hidden';
+            child.style['position'] = 'absolute';
+            if (child.hasAttribute('back')) {
+              child.style.transform = 'rotateY(180deg)';
+              child.style['-moz-backface-visibility'] = 'hidden';
+            }
+          }
+          this._height = height + 'px;';
+          this._width = width + 'px;';
+          this.updateStyles();
+        }
+      },
+
+      attached: function() {
+        var host = this;
+        this._observer = Polymer.dom(this.$.contentNode).observeNodes(function(info) {
+          host._applyStyles();
+        });
+      },
+
+      flip: function() {
+        document.querySelector('.card');
+        this.$.card.classList.toggle('flipped');
+      }
+
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>flip-element demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../flip-element.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic flip-element Demo</h3>
+      <demo-snippet style="height: 300px;">
+        <template>
+          <flip-element>
+            <div back style="width: 360px; height: 300px;"><iframe width="360" height="300" src="https://www.youtube.com/embed/c6SMZAOwrQQ" frameborder="0" allowfullscreen></iframe></div>
+            <img front style="width: 360px; height: 300px;" src="../images/logo.jpg">
+          </flip-element>
+          <button onclick="flip(event)">Flip</button>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <script>
+      function flip(event) {
+        var flipElement = event.target.parentElement.querySelector('flip-element');
+        flipElement.flip();
+      }
+    </script>
+
+  </body>
+</html>
