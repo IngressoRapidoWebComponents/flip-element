@@ -45,6 +45,7 @@ After that, create an editor:
         box-sizing: border-box;
       }
       .container {
+        background-color: var(--flip-element-background-color, white);
         font-family:verdana;
         height: 100%;
         perspective: 500px;
@@ -53,17 +54,13 @@ After that, create an editor:
       }
       .card {
         position: relative;
-        border-radius: 5px;
-        border: 1px solid #CCC;
         height: 100%;
         transform-style: preserve-3d;
         transition: 1s;
         width: 100%;
-        box-shadow: 0 0 10px #ccc;
       }
       #contentNode {
         backface-visibility:hidden;
-        border-radius: 5px;
         position: absolute;
       }
       .back { /* Background */
@@ -128,8 +125,8 @@ After that, create an editor:
               child.style['-moz-backface-visibility'] = 'hidden';
             }
           }
-          this._height = height + 'px;';
-          this._width = width + 'px;';
+          this._height = height + 'px';
+          this._width = width + 'px';
           this.updateStyles();
         }
       },
