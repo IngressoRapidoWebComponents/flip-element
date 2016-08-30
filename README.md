@@ -11,7 +11,7 @@ _[Demo and API docs](https://ingressorapidowebcomponents.github.io/components/fl
 The `flip-element` allows you to add two children nodes, one should have a `front` attribute and the other should have a `back` attribute.
 After this just call the `flip` when you want, so you will have a great animation!
 
-![alt front](images/front.png) ![alt back](images/back.png)
+![alt front](https://cdn.rawgit.com/IngressoRapidoWebComponents/flip-element/master/images/front.png) ![alt back](https://cdn.rawgit.com/IngressoRapidoWebComponents/flip-element/master/images/back.png)
 
 It's important to define the same size to front and back children node, like this:
 
