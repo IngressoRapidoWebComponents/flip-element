@@ -107,6 +107,10 @@ After that, create an editor:
         _width: {
           type: String,
           value: '100%'
+        },
+        _front: {
+          type: Boolean,
+          value: true
         }
       },
 
@@ -125,8 +129,8 @@ After that, create an editor:
               child.style['-moz-backface-visibility'] = 'hidden';
             }
           }
-          this._height = height + 'px';
-          this._width = width + 'px';
+          this._height = height ? height + 'px' : '100%';
+          this._width = width ? width + 'px' : '100%';
           this.updateStyles();
         }
       },
@@ -139,10 +143,14 @@ After that, create an editor:
       },
 
       flip: function() {
+        this._front = !this._front;
         document.querySelector('.card');
         this.$.card.classList.toggle('flipped');
-      }
+      },
 
+      isFrontSide: function() {
+        return this._front;
+      }
     });
   </script>
 </dom-module>
