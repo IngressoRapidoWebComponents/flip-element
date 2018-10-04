@@ -62,22 +62,26 @@ After that, create an editor:
         transition: 1s;
         width: 100%;
       }
+      :host([flip-right]) .card {
+        transform-origin: right center;
+      }
       :host:not([is-front-side]) .card {
         transform: rotateY(180deg);
+      }
+      :host:not([backface-visible]) .card {
         backface-visibility: hidden;
         -moz-backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
       }
 
       .card::content > * {
-        backface-visibility: hidden;
-        -moz-backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
         position: absolute;
+        z-index: 90;
       }
       .card::content > *[back],
       .card::content > .back {
         transform: rotateY(180deg);
+        z-index: 89;
       }
     </style>
     <div class="container">
@@ -108,6 +112,18 @@ After that, create an editor:
         isFrontSide: {
           type: Boolean,
           value: true,
+          reflectToAttribute: true
+        },
+        /** Whether to flip the back element to the right of the front element. */
+        flipRight: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+        /** Whether a side should remain visible (but mirrored) when being flipped to the back. */
+        backfaceVisible: {
+          type: Boolean,
+          value: false,
           reflectToAttribute: true
         }
       },
