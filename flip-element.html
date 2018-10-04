@@ -44,6 +44,7 @@ After that, create an editor:
       * {
         box-sizing: border-box;
       }
+
       .container {
         z-index: 99;
         background-color: var(--flip-element-background-color, white);
@@ -53,6 +54,7 @@ After that, create an editor:
         position: relative;
         width: 100%;
       }
+
       .card {
         position: relative;
         height: 100%;
@@ -60,34 +62,27 @@ After that, create an editor:
         transition: 1s;
         width: 100%;
       }
-      #contentNode {
-        backface-visibility:hidden;
+      :host:not([is-front-side]) .card {
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+
+      .card::content > * {
+        backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
         position: absolute;
       }
-      .back { /* Background */
+      .card::content > *[back],
+      .card::content > .back {
         transform: rotateY(180deg);
-        -moz-backface-visibility:hidden;
-      }
-      .card.flipped {
-        transform: rotateY(180deg);
-        -moz-backface-visibility:hidden;
-      }
-      .toggle {
-        display: block;
-        background-color: rgb(148, 201, 243);
-        padding: 10px;
-        text-align: center;
-        border-radius: 5px;
-        color: #fff;
-        text-decoration: none;
-        border: none;
-        width: 100%;
-        cursor: pointer;
       }
     </style>
     <div class="container">
       <div id="card" class="card" style$="height: {{_height}}; width: {{_width}};">
-        <content id="contentNode"></content>
+        <content></content>
       </div>
     </div>
   </template>
@@ -109,48 +104,42 @@ After that, create an editor:
           type: String,
           value: '100%'
         },
-        _front: {
+        /** If true, the child with the `front` attribute is shown, else, the child with the `back` attribute is shown. */
+        isFrontSide: {
           type: Boolean,
-          value: true
+          value: true,
+          reflectToAttribute: true
         }
       },
 
-      _applyStyles: function() {
+      _computeSize: function() {
         if (this.getContentChildren('content')) {
           var height = 0;
           var width = 0;
+
           for (var i = 0; this.getContentChildren('content').length > i; i++) {
             var child = this.getContentChildren('content')[i];
-            height = child.clientHeight > height ? child.clientHeight : height;
-            width = child.clientWidth > width ? child.clientWidth : width;
-            child.style['backface-visibility'] = 'hidden';
-            child.style['position'] = 'absolute';
-            if (child.hasAttribute('back')) {
-              child.style.transform = 'rotateY(180deg)';
-              child.style['-moz-backface-visibility'] = 'hidden';
-            }
+            height = Math.max(height, child.clientHeight);
+            width = Math.max(width, child.clientWidth);
           }
+
           this._height = height ? height + 'px' : '100%';
           this._width = width ? width + 'px' : '100%';
-          this.updateStyles();
         }
       },
 
       attached: function() {
         var host = this;
         this._observer = Polymer.dom(this.$.contentNode).observeNodes(function(info) {
-          host._applyStyles();
+          host._computeSize();
         });
       },
 
+      /**
+       * Shows the front side if the back side is currently shown and vice versa.
+       */
       flip: function() {
-        this._front = !this._front;
-        document.querySelector('.card');
-        this.$.card.classList.toggle('flipped');
-      },
-
-      isFrontSide: function() {
-        return this._front;
+        this.isFrontSide = !this.isFrontSide;
       }
     });
   </script>
