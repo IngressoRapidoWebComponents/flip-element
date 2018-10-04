@@ -104,6 +104,7 @@ After that, create an editor:
           type: String,
           value: '100%'
         },
+        /** If true, the child with the `front` attribute is shown, else, the child with the `back` attribute is shown. */
         isFrontSide: {
           type: Boolean,
           value: true,
@@ -134,6 +135,9 @@ After that, create an editor:
         });
       },
 
+      /**
+       * Shows the front side if the back side is currently shown and vice versa.
+       */
       flip: function() {
         this.isFrontSide = !this.isFrontSide;
       }
