@@ -62,7 +62,7 @@ After that, create an editor:
         transition: 1s;
         width: 100%;
       }
-      .card.flipped {
+      :host:not([is-front-side]) .card {
         transform: rotateY(180deg);
         backface-visibility: hidden;
         -moz-backface-visibility: hidden;
@@ -104,9 +104,10 @@ After that, create an editor:
           type: String,
           value: '100%'
         },
-        _front: {
+        isFrontSide: {
           type: Boolean,
-          value: true
+          value: true,
+          reflectToAttribute: true
         }
       },
 
@@ -134,13 +135,7 @@ After that, create an editor:
       },
 
       flip: function() {
-        this._front = !this._front;
-        document.querySelector('.card');
-        this.$.card.classList.toggle('flipped');
-      },
-
-      isFrontSide: function() {
-        return this._front;
+        this.isFrontSide = !this.isFrontSide;
       }
     });
   </script>
